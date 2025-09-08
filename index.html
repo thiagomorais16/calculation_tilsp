@@ -1,0 +1,1224 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InterpretPRO - Calculadora Profissional</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            color: #5a67d8;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .tabs {
+            display: flex;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .tab {
+            flex: 1;
+            padding: 15px 20px;
+            text-align: center;
+            cursor: pointer;
+            background: transparent;
+            border: none;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .tab.active {
+            background: #5a67d8;
+            color: white;
+        }
+
+        .content {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #4a5568;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #5a67d8;
+            box-shadow: 0 0 0 3px rgba(90, 103, 216, 0.1);
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .row-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            background: #5a67d8;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .btn:hover {
+            background: #4c51bf;
+            transform: translateY(-2px);
+        }
+
+        .result {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .result h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .result .price {
+            font-size: 3rem;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        .breakdown {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            text-align: left;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .service-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .service-card {
+            background: #f7fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .service-card:hover {
+            border-color: #5a67d8;
+            background: #edf2f7;
+        }
+
+        .service-card.selected {
+            border-color: #5a67d8;
+            background: rgba(90, 103, 216, 0.1);
+        }
+
+        .service-card h4 {
+            color: #5a67d8;
+            margin-bottom: 8px;
+        }
+
+        .translation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .translation-card {
+            background: #f7fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .translation-card:hover {
+            border-color: #5a67d8;
+            background: #edf2f7;
+        }
+
+        .translation-card.selected {
+            border-color: #5a67d8;
+            background: rgba(90, 103, 216, 0.1);
+        }
+
+        .translation-card h4 {
+            color: #5a67d8;
+            margin-bottom: 8px;
+        }
+
+        .editable-value {
+            background: rgba(90, 103, 216, 0.1);
+            padding: 5px 8px;
+            border-radius: 4px;
+            display: inline-block;
+            margin: 5px 0;
+            cursor: pointer;
+            border: 1px dashed #5a67d8;
+        }
+
+        .tag {
+            display: inline-block;
+            background: #e53e3e;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            margin: 2px;
+        }
+
+        .tag.presencial { background: #38a169; }
+        .tag.remoto { background: #3182ce; }
+        .tag.gravacao { background: #d69e2e; }
+
+        .toggle-group {
+            display: flex;
+            background: #f7fafc;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+
+        .toggle-option {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            background: transparent;
+            border: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-option.active {
+            background: #5a67d8;
+            color: white;
+        }
+
+        .conditional {
+            background: rgba(255, 193, 7, 0.1);
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .custos-detalhados {
+            background: #f8f9ff;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .footer-info {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .custo-base-info {
+            background: rgba(90, 103, 216, 0.1);
+            border: 2px solid #5a67d8;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .custo-base-info h4 {
+            color: #5a67d8;
+            margin-bottom: 10px;
+        }
+
+        .valor-editavel {
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px dashed #5a67d8;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: inline-block;
+            margin: 5px 0;
+            transition: all 0.3s ease;
+        }
+
+        .valor-editavel:hover {
+            background: rgba(255, 255, 255, 1);
+            transform: scale(1.02);
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .row, .row-3 {
+                grid-template-columns: 1fr;
+            }
+            
+            .result .price {
+                font-size: 2.5rem;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🎯 InterpretPRO</h1>
+            <p><strong>Estrutura FEBRAPLILS + Seus Custos Reais</strong></p>
+            <p>Precificação profissional integrada</p>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('config')">⚙️ Custos Fixos</button>
+            <button class="tab" onclick="showTab('interpretacao')">🗣️ Interpretação</button>
+            <button class="tab" onclick="showTab('traducao')">📝 Tradução</button>
+            <button class="tab" onclick="showTab('orcamento')">💰 Orçamento</button>
+        </div>
+
+        <!-- Config Tab -->
+        <div id="config" class="content">
+            <h2>⚙️ Configure Seus Custos Fixos Mensais</h2>
+            <p style="margin-bottom: 30px; color: #666;">Configure seus custos para ter uma base sólida de precificação</p>
+            
+            <div class="custos-detalhados">
+                <h3 style="margin-bottom: 20px; color: #5a67d8;">💰 Custos Operacionais</h3>
+                
+                <div class="row-3">
+                    <div class="form-group">
+                        <label>🏢 Contabilidade (R$)</label>
+                        <input type="number" id="contabilidade" placeholder="Ex: 300" value="300">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>🏠 Aluguel (R$)</label>
+                        <input type="number" id="aluguel" placeholder="Ex: 800" value="800">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>🌐 Internet (R$)</label>
+                        <input type="number" id="internet" placeholder="Ex: 120" value="120">
+                    </div>
+                </div>
+
+                <div class="row-3">
+                    <div class="form-group">
+                        <label>💻 Software (R$)</label>
+                        <input type="number" id="software" placeholder="Ex: 200" value="200">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>👥 RH/Apoio (R$)</label>
+                        <input type="number" id="rh" placeholder="Ex: 500" value="0">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>📊 Impostos (R$)</label>
+                        <input type="number" id="impostos" placeholder="Ex: 400" value="400">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group">
+                        <label>💼 Margem Lucro (%)</label>
+                        <input type="number" id="lucro" placeholder="Ex: 40" value="40">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>➕ Outros Custos (R$)</label>
+                        <input type="number" id="outros" placeholder="Ex: 300" value="300">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>⏰ Horas Trabalhadas/Mês</label>
+                    <input type="number" id="horasMes" placeholder="Ex: 120" value="120">
+                </div>
+            </div>
+
+            <button class="btn" onclick="calcularCustoHora()">💻 Calcular Custo Base</button>
+            
+            <div id="custoHoraResult" class="result hidden">
+                <h3>Seu Custo/Hora Base:</h3>
+                <div class="price" id="custoHoraValue">R$ 0,00</div>
+                <div class="breakdown" id="custoDetalhado"></div>
+            </div>
+        </div>
+
+        <!-- Interpretação Tab -->
+        <div id="interpretacao" class="content hidden">
+            <h2>🗣️ Interpretação - Contextos FEBRAPLILS</h2>
+            
+            <div class="custo-base-info" id="custoBaseInterpretacao">
+                <h4>💰 Seu Custo Base/Hora: <span id="custoBaseDisplay">Calcule na aba Custos Fixos</span></h4>
+                <p>Este valor será somado ao valor escolhido abaixo</p>
+            </div>
+            
+            <div class="service-grid">
+                <div class="service-card" onclick="selectService('educacional', this)">
+                    <h4>🎓 Educacional</h4>
+                    <p>Educação básica, técnica, superior</p>
+                    <p><strong>FEBRAPLILS:</strong> R$ 120,00-240,00/h</p>
+                    <div class="valor-editavel" onclick="editValue(event, 'educacional')">
+                        Seu valor extra: R$ <span id="valor_educacional">50,00</span>/h
+                    </div>
+                    <p style="font-size: 0.9em; color: #666; margin-top: 8px;">
+                        <strong>Total/hora:</strong> <span id="total_educacional">R$ 50,00</span>
+                    </p>
+                </div>
+                
+                <div class="service-card" onclick="selectService('juridico', this)">
+                    <h4>⚖️ Jurídico</h4>
+                    <p>Consultas, audiências, tribunais</p>
+                    <p><strong>FEBRAPLILS:</strong> R$ 144,00-192,00/h</p>
+                    <div class="valor-editavel" onclick="editValue(event, 'juridico')">
+                        Seu valor extra: R$ <span id="valor_juridico">70,00</span>/h
+                    </div>
+                    <p style="font-size: 0.9em; color: #666; margin-top: 8px;">
+                        <strong>Total/hora:</strong> <span id="total_juridico">R$ 70,00</span>
+                    </p>
+                </div>
+                
+                <div class="service-card" onclick="selectService('empresarial', this)">
+                    <h4>🏢 Empresarial</h4>
+                    <p>Reuniões, treinamentos, seleções</p>
+                    <p><strong>FEBRAPLILS:</strong> R$ 144,00/h</p>
+                    <div class="valor-editavel" onclick="editValue(event, 'empresarial')">
+                        Seu valor extra: R$ <span id="valor_empresarial">60,00</span>/h
+                    </div>
+                    <p style="font-size: 0.9em; color: #666; margin-top: 8px;">
+                        <strong>Total/hora:</strong> <span id="total_empresarial">R$ 60,00</span>
+                    </p>
+                </div>
+                
+                <div class="service-card" onclick="selectService('saude', this)">
+                    <h4>🏥 Saúde</h4>
+                    <p>Consultas, exames, tratamentos</p>
+                    <p><strong>FEBRAPLILS:</strong> R$ 144,00-500,00/h</p>
+                    <div class="valor-editavel" onclick="editValue(event, 'saude')">
+                        Seu valor extra: R$ <span id="valor_saude">80,00</span>/h
+                    </div>
+                    <p style="font-size: 0.9em; color: #666; margin-top: 8px;">
+                        <strong>Total/hora:</strong> <span id="total_saude">R$ 80,00</span>
+                    </p>
+                </div>
+                
+                <div class="service-card" onclick="selectService('conferencia', this)">
+                    <h4>🎤 Conferência</h4>
+                    <p>Palestras, congressos, seminários</p>
+                    <p><strong>FEBRAPLILS:</strong> R$ 144,00-180,00/h</p>
+                    <div class="valor-editavel" onclick="editValue(event, 'conferencia')">
+                        Seu valor extra: R$ <span id="valor_conferencia">90,00</span>/h
+                    </div>
+                    <p style="font-size: 0.9em; color: #666; margin-top: 8px;">
+                        <strong>Total/hora:</strong> <span id="total_conferencia">R$ 90,00</span>
+                    </p>
+                </div>
+                
+                <div class="service-card" onclick="selectService('cultural', this)">
+                    <h4>🎭 Artístico/Cultural</h4>
+                    <p>Shows, espetáculos, eventos</p>
+                    <p><strong>FEBRAPLILS:</strong> R$ 192,00/h</p>
+                    <div class="valor-editavel" onclick="editValue(event, 'cultural')">
+                        Seu valor extra: R$ <span id="valor_cultural">100,00</span>/h
+                    </div>
+                    <p style="font-size: 0.9em; color: #666; margin-top: 8px;">
+                        <strong>Total/hora:</strong> <span id="total_cultural">R$ 100,00</span>
+                    </p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>🏷️ Área de Atuação</label>
+                <input type="text" id="areaAtuacao" placeholder="Ex: Educação Técnica, Consultoria Jurídica">
+            </div>
+
+            <div class="row">
+                <div class="form-group">
+                    <label>⏰ Carga Horária</label>
+                    <input type="number" id="cargaHoraria" placeholder="Ex: 4" value="1">
+                </div>
+                
+                <div class="form-group">
+                    <label>📍 Modalidade</label>
+                    <div class="toggle-group">
+                        <button class="toggle-option active" onclick="setModalidade('presencial', this)">
+                            Presencial
+                        </button>
+                        <button class="toggle-option" onclick="setModalidade('remoto', this)">
+                            Remoto
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Campos condicionais presencial -->
+            <div id="presencialFields" class="conditional">
+                <h4>📍 Custos Presenciais</h4>
+                <div class="row">
+                    <div class="form-group">
+                        <label>🚗 Taxa Deslocamento (R$)</label>
+                        <input type="number" id="taxaDeslocamento" placeholder="Ex: 50" value="0">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>🍽️ Taxa Alimentação (R$)</label>
+                        <input type="number" id="taxaAlimentacao" placeholder="Ex: 35" value="0">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group">
+                    <label>🎥 Será Gravado/Streaming?</label>
+                    <div class="toggle-group">
+                        <button class="toggle-option active" onclick="setGravacao('nao', this)">
+                            Não
+                        </button>
+                        <button class="toggle-option" onclick="setGravacao('sim', this)">
+                            Sim
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="form-group" id="direitoImagemGroup" style="display: none;">
+                    <label>📹 Direito de Imagem (%)</label>
+                    <select id="direitoImagem">
+                        <option value="10">10%</option>
+                        <option value="15">15%</option>
+                        <option value="20">20%</option>
+                        <option value="25">25%</option>
+                        <option value="30">30%</option>
+                    </select>
+                </div>
+            </div>
+
+            <button class="btn" onclick="calcularInterpretacao()">🧮 Calcular Interpretação</button>
+            
+            <div id="interpretacaoResult" class="result hidden"></div>
+        </div>
+
+        <!-- Tradução Tab -->
+        <div id="traducao" class="content hidden">
+            <h2>📝 Tradução - Modalidades FEBRAPLILS</h2>
+            
+            <div class="custo-base-info" id="custoBaseTraducao">
+                <h4>💰 Seu Custo Base/Hora: <span id="custoBaseTraducaoDisplay">Calcule na aba Custos Fixos</span></h4>
+                <p>Este valor será usado como base para calcular preços por unidade</p>
+            </div>
+            
+            <p style="margin-bottom: 20px; color: #666;">Clique nos valores para editá-los (valores são somados ao seu custo base)</p>
+            
+            <div class="translation-grid">
+                <div class="translation-card" onclick="selectTranslation('tecnica', this)">
+                    <h4>🔧 Técnica</h4>
+                    <p>Português ↔ Libras modalidade escrita</p>
+                    <p><strong>FEBRAPLILS:</strong> R$ 0,45/palavra</p>
+                    <div class="valor-editavel" onclick="editTranslationValue(event, 'tecnica')">
+                        Seu valor extra: R$ <span id="trad_tecnica">0,15</span>/palavra
+                    </div>
+                    <p style="font-size: 0.9em; color: #666; margin-top: 8px;">
+                        <strong>Total:</strong> <span id="total_trad_tecnica">R$ 0,15</span>/palavra
+                    </p>
+                </div>
+                
+                <div class="translation-card" onclick="selectTranslation('literaria', this)">
+                    <h4>📚 Literária</h4>
+                    <p>Por lauda (30 linhas/2100 chars)</p>
+                    <p><strong>FEBRAPLILS:</strong> R$ 72,00/lauda</p>
+                    <div class="valor-editavel" onclick="editTranslationValue(event, 'literaria')">
+                        Seu valor extra: R$ <span id="trad_literaria">20,00</span>/lauda
+                    </div>
+                    <p style="font-size: 0.9em; color: #666; margin-top: 8px;">
+                        <strong>Total:</strong> <span id="total_trad_literaria">R$ 20,00</span>/lauda
+                    </p>
+                </div>
+                
+                <div class="translation-card" onclick="selectTranslation('provas', this)">
+                    <h4>📋 Provas</h4>
+                    <p>Vestibulares, exames, concursos</p>
+                    <p><strong>FEBRAPLILS:</strong> R$ 200,00/item</p>
+                    <div class="valor-editavel" onclick="editTranslationValue(event, 'provas')">
+                        Seu valor extra: R$ <span id="trad_provas">50,00</span>/item
+                    </div>
+                    <p style="font-size: 0.9em; color: #666; margin-top: 8px;">
+                        <strong>Total:</strong> <span id="total_trad_provas">R$ 50,00</span>/item
+                    </p>
+                </div>
+                
+                <div class="translation-card" onclick="selectTranslation('revisao_provas', this)">
+                    <h4>✅ Revisão de Provas</h4>
+                    <p>Revisão de vestibulares e concursos</p>
+                    <p><strong>FEBRAPLILS:</strong> R$ 100,00/item</p>
+                    <div class="valor-editavel" onclick="editTranslationValue(event, 'revisao_provas')">
+                        Seu valor extra: R$ <span id="trad_revisao_provas">30,00</span>/item
+                    </div>
+                    <p style="font-size: 0.9em; color: #666; margin-top: 8px;">
+                        <strong>Total:</strong> <span id="total_trad_revisao_provas">R$ 30,00</span>/item
+                    </p>
+                </div>
+                
+                <div class="translation-card" onclick="selectTranslation('idioma_estrangeiro', this)">
+                    <h4>🌍 Idioma Estrangeiro</h4>
+                    <p>Idioma estrangeiro ↔ Libras</p>
+                    <p><strong>FEBRAPLILS:</strong> R$ 144,00/lauda</p>
+                    <div class="valor-editavel" onclick="editTranslationValue(event, 'idioma_estrangeiro')">
+                        Seu valor extra: R$ <span id="trad_idioma_estrangeiro">40,00</span>/lauda
+                    </div>
+                    <p style="font-size: 0.9em; color: #666; margin-top: 8px;">
+                        <strong>Total:</strong> <span id="total_trad_idioma_estrangeiro">R$ 40,00</span>/lauda
+                    </p>
+                </div>
+                
+                <div class="translation-card" onclick="selectTranslation('libras_portugues', this)">
+                    <h4>📝 Libras → Português</h4>
+                    <p>Libras para português escrito</p>
+                    <p><strong>FEBRAPLILS:</strong> R$ 24,00/min</p>
+                    <div class="valor-editavel" onclick="editTranslationValue(event, 'libras_portugues')">
+                        Seu valor extra: R$ <span id="trad_libras_portugues">8,00</span>/min
+                    </div>
+                    <p style="font-size: 0.9em; color: #666; margin-top: 8px;">
+                        <strong>Total:</strong> <span id="total_trad_libras_portugues">R$ 8,00</span>/min
+                    </p>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group">
+                    <label id="quantidadeLabel">📊 Quantidade</label>
+                    <input type="number" id="quantidadeTraducao" placeholder="Ex: 1000" value="1">
+                </div>
+                
+                <div class="form-group">
+                    <label>🔧 Complexidade</label>
+                    <select id="complexidade">
+                        <option value="1">Básica</option>
+                        <option value="1.3">Média (+30%)</option>
+                        <option value="1.6">Alta (+60%)</option>
+                        <option value="2">Especializada (+100%)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>🎥 Será Gravado?</label>
+                <div class="toggle-group">
+                    <button class="toggle-option active" onclick="setGravacaoTrad('nao', this)">
+                        Não
+                    </button>
+                    <button class="toggle-option" onclick="setGravacaoTrad('sim', this)">
+                        Sim
+                    </button>
+                </div>
+            </div>
+
+            <div class="form-group" id="direitoImagemTradGroup" style="display: none;">
+                <label>📹 Direito de Imagem (%)</label>
+                <select id="direitoImagemTrad">
+                    <option value="10">10%</option>
+                    <option value="15">15%</option>
+                    <option value="20">20%</option>
+                    <option value="25">25%</option>
+                    <option value="30">30%</option>
+                </select>
+            </div>
+
+            <button class="btn" onclick="calcularTraducao()">🧮 Calcular Tradução</button>
+            
+            <div id="traducaoResult" class="result hidden"></div>
+        </div>
+
+        <!-- Orçamento Tab -->
+        <div id="orcamento" class="content hidden">
+            <h2>💰 Gerar Orçamento Profissional</h2>
+            
+            <div class="row">
+                <div class="form-group">
+                    <label>👤 Nome do Cliente</label>
+                    <input type="text" id="nomeCliente" placeholder="Ex: Empresa ABC Ltda">
+                </div>
+                
+                <div class="form-group">
+                    <label>📧 Seu Email</label>
+                    <input type="email" id="emailProfissional" placeholder="seu@email.com">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>📝 Descrição do Serviço</label>
+                <textarea id="descricaoServico" rows="3" placeholder="Ex: Interpretação simultânea para reunião empresarial de 4 horas"></textarea>
+            </div>
+
+            <button class="btn" onclick="gerarOrcamento()">📄 Gerar Orçamento</button>
+            
+            <div id="orcamentoResult" class="result hidden"></div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer-info">
+            <small>
+                <strong>💡 InterpretPRO - Sistema Integrado</strong><br>
+                Estrutura baseada na FEBRAPLILS + seus custos operacionais reais.<br>
+                Desenvolvido para profissionais que querem precificar com transparência e competitividade.
+            </small>
+        </div>
+    </div>
+
+    <script>
+        // Variáveis globais
+        let custoHora = 0;
+        let servicoSelecionado = null;
+        let tipoTraducao = null;
+        let ultimoCalculo = {};
+        let modalidadeAtual = 'presencial';
+        let gravacaoAtual = 'nao';
+        let gravacaoTradAtual = 'nao';
+
+        // Dados dos serviços e traduções
+        const tiposTraducao = {
+            tecnica: { nome: 'Técnica', unidade: 'palavra', baseUnidade: 0.30 },
+            literaria: { nome: 'Literária', unidade: 'lauda', baseUnidade: 40.00 },
+            provas: { nome: 'Provas/Exames', unidade: 'item', baseUnidade: 120.00 },
+            revisao_provas: { nome: 'Revisão de Provas', unidade: 'item', baseUnidade: 60.00 },
+            idioma_estrangeiro: { nome: 'Idioma Estrangeiro', unidade: 'lauda', baseUnidade: 80.00 },
+            libras_portugues: { nome: 'Libras → Português', unidade: 'minuto', baseUnidade: 12.00 }
+        };
+
+        const servicosInterpretacao = {
+            educacional: { nome: 'Educacional', baseHora: 50.00 },
+            juridico: { nome: 'Jurídico', baseHora: 70.00 },
+            empresarial: { nome: 'Empresarial', baseHora: 60.00 },
+            saude: { nome: 'Saúde', baseHora: 80.00 },
+            conferencia: { nome: 'Conferência', baseHora: 90.00 },
+            cultural: { nome: 'Artístico/Cultural', baseHora: 100.00 }
+        };
+
+        // Funções de navegação
+        function showTab(tabName) {
+            document.querySelectorAll('.content').forEach(content => {
+                content.classList.add('hidden');
+            });
+            
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            document.getElementById(tabName).classList.remove('hidden');
+            event.target.classList.add('active');
+            
+            // Atualizar displays de custo base quando mudar de aba
+            atualizarDisplaysCustoBase();
+        }
+
+        // Função para atualizar displays de custo base
+        function atualizarDisplaysCustoBase() {
+            const custoDisplay = custoHora > 0 ? `R$ ${custoHora.toFixed(2)}` : 'Calcule na aba Custos Fixos';
+            
+            // Atualizar display na aba interpretação
+            const custoBaseDisplay = document.getElementById('custoBaseDisplay');
+            if (custoBaseDisplay) {
+                custoBaseDisplay.textContent = custoDisplay;
+            }
+            
+            // Atualizar display na aba tradução
+            const custoBaseTraducaoDisplay = document.getElementById('custoBaseTraducaoDisplay');
+            if (custoBaseTraducaoDisplay) {
+                custoBaseTraducaoDisplay.textContent = custoDisplay;
+            }
+            
+            // Atualizar totais de interpretação
+            atualizarTotaisInterpretacao();
+            
+            // Atualizar totais de tradução
+            atualizarTotaisTraducao();
+        }
+
+        // Função para atualizar totais de interpretação
+        function atualizarTotaisInterpretacao() {
+            Object.keys(servicosInterpretacao).forEach(servico => {
+                const valorExtra = parseFloat(document.getElementById(`valor_${servico}`).textContent) || 0;
+                const valorTotal = custoHora + valorExtra;
+                const totalSpan = document.getElementById(`total_${servico}`);
+                if (totalSpan) {
+                    totalSpan.textContent = `R$ ${valorTotal.toFixed(2)}`;
+                }
+            });
+        }
+
+        // Função para atualizar totais de tradução
+        function atualizarTotaisTraducao() {
+            Object.keys(tiposTraducao).forEach(tipo => {
+                const valorExtraSpan = document.getElementById(`trad_${tipo}`);
+                const totalSpan = document.getElementById(`total_trad_${tipo}`);
+                
+                if (valorExtraSpan && totalSpan) {
+                    const valorExtra = parseFloat(valorExtraSpan.textContent) || 0;
+                    // Para tradução, calculamos uma base proporcional ao custo/hora
+                    const baseCalculada = tiposTraducao[tipo].baseUnidade + (custoHora * 0.1);
+                    const valorTotal = baseCalculada + valorExtra;
+                    totalSpan.textContent = `R$ ${valorTotal.toFixed(4)}`;
+                }
+            });
+        }
+
+        // Função para calcular custo hora
+        function calcularCustoHora() {
+            const contabilidade = parseFloat(document.getElementById('contabilidade').value) || 0;
+            const aluguel = parseFloat(document.getElementById('aluguel').value) || 0;
+            const internet = parseFloat(document.getElementById('internet').value) || 0;
+            const software = parseFloat(document.getElementById('software').value) || 0;
+            const rh = parseFloat(document.getElementById('rh').value) || 0;
+            const impostos = parseFloat(document.getElementById('impostos').value) || 0;
+            const outros = parseFloat(document.getElementById('outros').value) || 0;
+            const lucro = parseFloat(document.getElementById('lucro').value) || 0;
+            const horasMes = parseFloat(document.getElementById('horasMes').value) || 1;
+            
+            const custoTotal = contabilidade + aluguel + internet + software + rh + impostos + outros;
+            const custoBase = custoTotal / horasMes;
+            custoHora = custoBase * (1 + lucro / 100);
+            
+            document.getElementById('custoHoraValue').textContent = `R$ ${custoHora.toFixed(2)}`;
+            
+            const detalhamento = `
+                <h4>📋 Detalhamento dos Custos:</h4>
+                <p><strong>Contabilidade:</strong> R$ ${contabilidade.toFixed(2)}</p>
+                <p><strong>Aluguel:</strong> R$ ${aluguel.toFixed(2)}</p>
+                <p><strong>Internet:</strong> R$ ${internet.toFixed(2)}</p>
+                <p><strong>Software:</strong> R$ ${software.toFixed(2)}</p>
+                <p><strong>RH/Apoio:</strong> R$ ${rh.toFixed(2)}</p>
+                <p><strong>Impostos:</strong> R$ ${impostos.toFixed(2)}</p>
+                <p><strong>Outros:</strong> R$ ${outros.toFixed(2)}</p>
+                <hr style="margin: 10px 0; opacity: 0.3;">
+                <p><strong>Total Mensal:</strong> R$ ${custoTotal.toFixed(2)}</p>
+                <p><strong>Horas/Mês:</strong> ${horasMes}h</p>
+                <p><strong>Custo Base/Hora:</strong> R$ ${custoBase.toFixed(2)}</p>
+                <p><strong>Margem Lucro:</strong> ${lucro}%</p>
+                <hr style="margin: 10px 0; opacity: 0.3;">
+                <p><strong>CUSTO/HORA FINAL:</strong> R$ ${custoHora.toFixed(2)}</p>
+            `;
+            
+            document.getElementById('custoDetalhado').innerHTML = detalhamento;
+            document.getElementById('custoHoraResult').classList.remove('hidden');
+            
+            // Atualizar todos os displays
+            atualizarDisplaysCustoBase();
+        }
+
+        // Funções de seleção
+        function selectService(servico, element) {
+            document.querySelectorAll('.service-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            element.classList.add('selected');
+            servicoSelecionado = servico;
+            
+            // Preencher automaticamente a área de atuação
+            document.getElementById('areaAtuacao').value = servicosInterpretacao[servico].nome;
+        }
+
+        function selectTranslation(tipo, element) {
+            document.querySelectorAll('.translation-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            element.classList.add('selected');
+            tipoTraducao = tipo;
+            
+            const unidade = tiposTraducao[tipo].unidade;
+            document.getElementById('quantidadeLabel').textContent = `📊 Quantidade (${unidade}s)`;
+        }
+
+        // Funções de edição de valores
+        function editValue(event, servico) {
+            event.stopPropagation();
+            const span = document.getElementById(`valor_${servico}`);
+            const currentValue = span.textContent;
+            const newValue = prompt(`Digite o valor extra por hora para ${servicosInterpretacao[servico].nome}:`, currentValue);
+            
+            if (newValue !== null && !isNaN(parseFloat(newValue))) {
+                span.textContent = parseFloat(newValue).toFixed(2);
+                atualizarTotaisInterpretacao();
+            }
+        }
+
+        function editTranslationValue(event, tipo) {
+            event.stopPropagation();
+            const span = document.getElementById(`trad_${tipo}`);
+            const currentValue = span.textContent;
+            const newValue = prompt(`Digite o valor extra por ${tiposTraducao[tipo].unidade} para ${tiposTraducao[tipo].nome}:`, currentValue);
+            
+            if (newValue !== null && !isNaN(parseFloat(newValue))) {
+                span.textContent = parseFloat(newValue).toFixed(4);
+                atualizarTotaisTraducao();
+            }
+        }
+
+        // Funções de toggle
+        function setModalidade(modalidade, element) {
+            modalidadeAtual = modalidade;
+            
+            element.parentNode.querySelectorAll('.toggle-option').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            element.classList.add('active');
+            
+            const presencialFields = document.getElementById('presencialFields');
+            if (modalidade === 'presencial') {
+                presencialFields.style.display = 'block';
+            } else {
+                presencialFields.style.display = 'none';
+            }
+        }
+
+        function setGravacao(opcao, element) {
+            gravacaoAtual = opcao;
+            
+            element.parentNode.querySelectorAll('.toggle-option').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            element.classList.add('active');
+            
+            const direitoImagemGroup = document.getElementById('direitoImagemGroup');
+            if (opcao === 'sim') {
+                direitoImagemGroup.style.display = 'block';
+            } else {
+                direitoImagemGroup.style.display = 'none';
+            }
+        }
+
+        function setGravacaoTrad(opcao, element) {
+            gravacaoTradAtual = opcao;
+            
+            element.parentNode.querySelectorAll('.toggle-option').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            element.classList.add('active');
+            
+            const direitoImagemTradGroup = document.getElementById('direitoImagemTradGroup');
+            if (opcao === 'sim') {
+                direitoImagemTradGroup.style.display = 'block';
+            } else {
+                direitoImagemTradGroup.style.display = 'none';
+            }
+        }
+
+        // Cálculos
+        function calcularInterpretacao() {
+            if (!servicoSelecionado) {
+                alert('Selecione um tipo de serviço primeiro!');
+                return;
+            }
+            
+            if (custoHora === 0) {
+                alert('Configure seus custos primeiro na aba "Custos Fixos"!');
+                return;
+            }
+            
+            const cargaHoraria = parseFloat(document.getElementById('cargaHoraria').value) || 1;
+            const areaAtuacao = document.getElementById('areaAtuacao').value || servicosInterpretacao[servicoSelecionado].nome;
+            
+            // Calcular valor base: custo hora + valor extra do serviço
+            const valorExtra = parseFloat(document.getElementById(`valor_${servicoSelecionado}`).textContent) || 0;
+            const valorHoraTotal = custoHora + valorExtra;
+            
+            let custoAdicional = 0;
+            let detalhesAdicionais = [];
+            
+            // Custos presenciais
+            if (modalidadeAtual === 'presencial') {
+                const taxaDeslocamento = parseFloat(document.getElementById('taxaDeslocamento').value) || 0;
+                const taxaAlimentacao = parseFloat(document.getElementById('taxaAlimentacao').value) || 0;
+                custoAdicional = taxaDeslocamento + taxaAlimentacao;
+                
+                if (taxaDeslocamento > 0) detalhesAdicionais.push(`Deslocamento: R$ ${taxaDeslocamento.toFixed(2)}`);
+                if (taxaAlimentacao > 0) detalhesAdicionais.push(`Alimentação: R$ ${taxaAlimentacao.toFixed(2)}`);
+            }
+            
+            let valorTotal = (valorHoraTotal * cargaHoraria) + custoAdicional;
+            
+            // Direito de imagem
+            if (gravacaoAtual === 'sim') {
+                const direitoImagem = parseFloat(document.getElementById('direitoImagem').value) || 0;
+                const acrescimoImagem = valorTotal * (direitoImagem / 100);
+                valorTotal += acrescimoImagem;
+                detalhesAdicionais.push(`Direito de Imagem (${direitoImagem}%): R$ ${acrescimoImagem.toFixed(2)}`);
+            }
+            
+            // Salvar último cálculo
+            ultimoCalculo = {
+                tipo: 'interpretacao',
+                servico: servicosInterpretacao[servicoSelecionado].nome,
+                valor: valorTotal,
+                detalhes: `${cargaHoraria} hora(s) de ${servicosInterpretacao[servicoSelecionado].nome} - ${modalidadeAtual}`,
+                area: areaAtuacao
+            };
+            
+            // Mostrar resultado
+            const resultDiv = document.getElementById('interpretacaoResult');
+            resultDiv.innerHTML = `
+                <h3>Orçamento - ${servicosInterpretacao[servicoSelecionado].nome}</h3>
+                <div class="price">R$ ${valorTotal.toFixed(2)}</div>
+                <div class="breakdown">
+                    <h4>📋 Detalhamento:</h4>
+                    <p><strong>Área de Atuação:</strong> ${areaAtuacao}</p>
+                    <p><strong>Modalidade:</strong> ${modalidadeAtual === 'presencial' ? '📍 Presencial' : '💻 Remoto'}</p>
+                    <p><strong>Carga Horária:</strong> ${cargaHoraria} hora(s)</p>
+                    <p><strong>Custo Base/Hora:</strong> R$ ${custoHora.toFixed(2)}</p>
+                    <p><strong>Valor Extra/Hora:</strong> R$ ${valorExtra.toFixed(2)}</p>
+                    <p><strong>Total/Hora:</strong> R$ ${valorHoraTotal.toFixed(2)}</p>
+                    <p><strong>Subtotal Serviço:</strong> R$ ${(valorHoraTotal * cargaHoraria).toFixed(2)}</p>
+                    ${detalhesAdicionais.length > 0 ? detalhesAdicionais.map(d => `<p><strong>${d}</strong></p>`).join('') : ''}
+                    ${gravacaoAtual === 'sim' ? '<span class="tag gravacao">Gravação/Streaming</span>' : ''}
+                    <span class="tag ${modalidadeAtual}">${modalidadeAtual === 'presencial' ? 'Presencial' : 'Remoto'}</span>
+                    <hr style="margin: 10px 0; opacity: 0.3;">
+                    <p><strong>TOTAL:</strong> R$ ${valorTotal.toFixed(2)}</p>
+                </div>
+            `;
+            resultDiv.classList.remove('hidden');
+        }
+
+        function calcularTraducao() {
+            if (!tipoTraducao) {
+                alert('Selecione um tipo de tradução primeiro!');
+                return;
+            }
+            
+            const quantidade = parseFloat(document.getElementById('quantidadeTraducao').value) || 1;
+            const complexidade = parseFloat(document.getElementById('complexidade').value) || 1;
+            
+            // Calcular valor unitário: base calculada + valor extra
+            const valorExtra = parseFloat(document.getElementById(`trad_${tipoTraducao}`).textContent) || 0;
+            const baseCalculada = tiposTraducao[tipoTraducao].baseUnidade + (custoHora * 0.1);
+            const valorUnitario = baseCalculada + valorExtra;
+            
+            let valorTotal = valorUnitario * quantidade * complexidade;
+            
+            let detalhesAdicionais = [];
+            
+            // Direito de imagem para tradução
+            if (gravacaoTradAtual === 'sim') {
+                const direitoImagemTrad = parseFloat(document.getElementById('direitoImagemTrad').value) || 0;
+                const acrescimoImagem = valorTotal * (direitoImagemTrad / 100);
+                valorTotal += acrescimoImagem;
+                detalhesAdicionais.push(`Direito de Imagem (${direitoImagemTrad}%): R$ ${acrescimoImagem.toFixed(2)}`);
+            }
+            
+            // Salvar último cálculo
+            ultimoCalculo = {
+                tipo: 'traducao',
+                servico: tiposTraducao[tipoTraducao].nome,
+                valor: valorTotal,
+                detalhes: `${quantidade} ${tiposTraducao[tipoTraducao].unidade}(s) de ${tiposTraducao[tipoTraducao].nome}`
+            };
+            
+            // Mostrar resultado
+            const resultDiv = document.getElementById('traducaoResult');
+            resultDiv.innerHTML = `
+                <h3>Orçamento - ${tiposTraducao[tipoTraducao].nome}</h3>
+                <div class="price">R$ ${valorTotal.toFixed(2)}</div>
+                <div class="breakdown">
+                    <h4>📋 Detalhamento:</h4>
+                    <p><strong>Modalidade:</strong> ${tiposTraducao[tipoTraducao].nome}</p>
+                    <p><strong>Quantidade:</strong> ${quantidade} ${tiposTraducao[tipoTraducao].unidade}(s)</p>
+                    <p><strong>Base Calculada/${tiposTraducao[tipoTraducao].unidade}:</strong> R$ ${baseCalculada.toFixed(4)}</p>
+                    <p><strong>Valor Extra/${tiposTraducao[tipoTraducao].unidade}:</strong> R$ ${valorExtra.toFixed(4)}</p>
+                    <p><strong>Total/${tiposTraducao[tipoTraducao].unidade}:</strong> R$ ${valorUnitario.toFixed(4)}</p>
+                    <p><strong>Complexidade:</strong> ${(complexidade * 100)}%</p>
+                    <p><strong>Subtotal:</strong> R$ ${(valorUnitario * quantidade * complexidade).toFixed(2)}</p>
+                    ${detalhesAdicionais.length > 0 ? detalhesAdicionais.map(d => `<p><strong>${d}</strong></p>`).join('') : ''}
+                    ${gravacaoTradAtual === 'sim' ? '<span class="tag gravacao">Gravação</span>' : ''}
+                    <hr style="margin: 10px 0; opacity: 0.3;">
+                    <p><strong>TOTAL:</strong> R$ ${valorTotal.toFixed(2)}</p>
+                </div>
+            `;
+            resultDiv.classList.remove('hidden');
+        }
+
+        function gerarOrcamento() {
+            if (!ultimoCalculo.valor) {
+                alert('Faça um cálculo primeiro nas abas "Interpretação" ou "Tradução"!');
+                return;
+            }
+            
+            const cliente = document.getElementById('nomeCliente').value || 'Cliente';
+            const email = document.getElementById('emailProfissional').value || 'profissional@email.com';
+            const descricao = document.getElementById('descricaoServico').value || ultimoCalculo.detalhes;
+            
+            const dataAtual = new Date().toLocaleDateString('pt-BR');
+            const numeroOrcamento = Math.floor(Math.random() * 10000);
+            
+            const orcamento = `
+                <h3>📄 Proposta Comercial #${numeroOrcamento}</h3>
+                <div class="price">R$ ${ultimoCalculo.valor.toFixed(2)}</div>
+                <div class="breakdown" style="text-align: left;">
+                    <h4>📋 PROPOSTA COMERCIAL</h4>
+                    <p><strong>Data:</strong> ${dataAtual}</p>
+                    <p><strong>Cliente:</strong> ${cliente}</p>
+                    <p><strong>Profissional:</strong> ${email}</p>
+                    <hr style="margin: 15px 0; opacity: 0.3;">
+                    <h4>Serviço Solicitado:</h4>
+                    <p>${descricao}</p>
+                    <p><strong>Modalidade:</strong> ${ultimoCalculo.servico}</p>
+                    ${ultimoCalculo.area ? `<p><strong>Área de Atuação:</strong> ${ultimoCalculo.area}</p>` : ''}
+                    <hr style="margin: 15px 0; opacity: 0.3;">
+                    <h4>💰 VALOR TOTAL: R$ ${ultimoCalculo.valor.toFixed(2)}</h4>
+                    <br>
+                    <p style="font-size: 0.9rem; opacity: 0.8;">
+                        <em>💡 Este orçamento foi calculado seguindo a estrutura profissional da FEBRAPLILS 
+                        integrada com custos operacionais reais. O valor base inclui todos os custos fixos 
+                        mensais (contabilidade, aluguel, internet, software, impostos, margem de lucro) 
+                        mais valores específicos por modalidade de serviço.</em>
+                    </p>
+                    <hr style="margin: 15px 0; opacity: 0.3;">
+                    <p style="font-size: 0.9rem;">
+                        <strong>Validade:</strong> 30 dias<br>
+                        <strong>Forma de Pagamento:</strong> À combinar<br>
+                        <strong>Prazo de Execução:</strong> Conforme agendamento
+                    </p>
+                </div>
+                <br>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn" onclick="window.print()" style="background: #38a169; flex: 1;">
+                        🖨️ Imprimir/PDF
+                    </button>
+                    <button class="btn" onclick="copiarOrcamento()" style="background: #3182ce; flex: 1;">
+                        📋 Copiar Texto
+                    </button>
+                </div>
+            `;
+            
+            document.getElementById('orcamentoResult').innerHTML = orcamento;
+            document.getElementById('orcamentoResult').classList.remove('hidden');
+        }
+
+        function copiarOrcamento() {
+            const cliente = document.getElementById('nomeCliente').value || 'Cliente';
+            const email = document.getElementById('emailProfissional').value || 'profissional@email.com';
+            const descricao = document.getElementById('descricaoServico').value || ultimoCalculo.detalhes;
+            const dataAtual = new Date().toLocaleDateString('pt-BR');
+            const numeroOrcamento = Math.floor(Math.random() * 10000);
+            
+            const textoOrcamento = `
+PROPOSTA COMERCIAL #${numeroOrcamento}
+
+Data: ${dataAtual}
+Cliente: ${cliente}
+Profissional: ${email}
+
+SERVIÇO SOLICITADO:
+${descricao}
+Modalidade: ${ultimoCalculo.servico}
+${ultimoCalculo.area ? `Área de Atuação: ${ultimoCalculo.area}` : ''}
+
+VALOR TOTAL: R$ ${ultimoCalculo.valor.toFixed(2)}
+
+Este orçamento foi calculado seguindo a estrutura profissional da FEBRAPLILS integrada com custos operacionais reais.
+
+Validade: 30 dias
+Forma de Pagamento: À combinar
+Prazo de Execução: Conforme agendamento
+            `;
+            
+            navigator.clipboard.writeText(textoOrcamento).then(() => {
+                alert('Orçamento copiado para a área de transferência!');
+            }).catch(err => {
+                console.error('Erro ao copiar: ', err);
+            });
+        }
+
+        // Inicialização
+        window.onload = function() {
+            calcularCustoHora();
+            atualizarDisplaysCustoBase();
+        };
+    </script>
+</body>
+</html>
